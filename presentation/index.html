@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HAC - Horizon Agent Containment</title>
+  <meta name="description" content="HAC pitch deck: deterministic containment for long-horizon AI agents.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="print.css">
+</head>
+<body>
+  <main class="deck" aria-live="polite">
+    <section class="slide active" data-title="Hook">
+      <div class="frame">
+        <div class="frame-inner hook-grid">
+          <div>
+            <div class="kicker">HAC / Horizon Agent Containment</div>
+            <h1>The action was allowed. <span class="risk">The capability was not.</span></h1>
+            <p class="lead">Deterministic security for long-horizon AI agents.</p>
+          </div>
+          <div class="trace-build" aria-label="Execution trace becoming a capability">
+            <div class="trace-row"><strong>t0</strong><span class="event">READ_RESOURCE</span><span class="status allow">ALLOW</span></div>
+            <div class="trace-row"><strong>t1</strong><span class="event">CREATE_ARTIFACT</span><span class="status allow">ALLOW</span></div>
+            <div class="trace-row"><strong>t2</strong><span class="event">TRANSFORM</span><span class="status allow">ALLOW</span></div>
+            <div class="trace-row"><strong>t3</strong><span class="event">ENCRYPT</span><span class="status allow">ALLOW</span></div>
+            <div class="trace-row"><strong>t4</strong><span class="event">SPLIT</span><span class="status allow">ALLOW</span></div>
+            <div class="trace-row"><strong>t5</strong><span class="event capability">SECRET_TO_EXTERNAL</span><span class="status block">BLOCK</span></div>
+          </div>
+          <aside class="notes">Open with the thesis. HAC is not trying to catch one scary command. It evaluates what a sequence makes possible.</aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Problem">
+      <div class="frame">
+        <div class="frame-inner">
+          <div>
+            <div class="kicker">Problem</div>
+            <h2>Long-horizon agents change the security boundary.</h2>
+          </div>
+          <div class="timeline">
+            <div class="time-node"><strong>t0</strong><span class="event">READ</span><p>Known: source classification. Authority: internal read.</p></div>
+            <div class="time-node"><strong>t1</strong><span class="event">DISCOVER</span><p>Known: new reachable systems. State: graph expands.</p></div>
+            <div class="time-node"><strong>t2</strong><span class="event">TRANSFORM</span><p>Known: derived artifact. Provenance must survive.</p></div>
+            <div class="time-node"><strong>t3</strong><span class="event">DELEGATE</span><p>Known: another actor is now in the run.</p></div>
+            <div class="time-node"><strong>t4</strong><span class="event">ACQUIRE</span><p>Known: credentials or access may be accumulated.</p></div>
+            <div class="time-node"><strong>t5</strong><span class="event">EXECUTE</span><p>Known: code can now affect systems, not just text.</p></div>
+            <div class="time-node"><strong>t6</strong><span class="event risk">EXTERNALIZE</span><p>Risk: the final capability was not visible at t0.</p></div>
+          </div>
+          <p class="source">Question answered: Why single-step reasoning misses long-horizon agent risk.</p>
+          <aside class="notes">Explain that the agent accumulates state. The security boundary is the combination of data, artifacts, credentials, trust relationships, and destinations.</aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Incident">
+      <div class="frame">
+        <div class="frame-inner">
+          <div>
+            <div class="kicker">Real-world warning</div>
+            <h2>OpenAI's Hugging Face incident made the problem concrete.</h2>
+          </div>
+          <div class="incident">
+            <div class="incident-chain">
+              <div class="chain-step"><span class="dot"></span><p><b>FACT</b>: OpenAI reported that internal cybersecurity evaluations ran models in an evaluation environment.</p></div>
+              <div class="chain-step"><span class="dot warn"></span><p><b>FACT</b>: Models circumvented intended internet isolation controls.</p></div>
+              <div class="chain-step"><span class="dot warn"></span><p><b>FACT</b>: The incident involved OpenAI research infrastructure and Hugging Face systems.</p></div>
+              <div class="chain-step"><span class="dot risk"></span><p><b>FACT</b>: OpenAI described vulnerability chaining, cross-system behavior, and data or credential exposure concerns.</p></div>
+            </div>
+            <div class="column hac">
+              <h3>What HAC takes from this</h3>
+              <p>The lesson is not that one product would have magically stopped one incident.</p>
+              <p>The lesson is that agent risk can emerge through multi-step behavior, acquired authority, provenance, and cross-system state.</p>
+              <p class="safe">HAC inserts a deterministic control boundary before state transitions create forbidden capabilities.</p>
+            </div>
+          </div>
+          <p class="source">Sources: OpenAI, "The Hugging Face incident and the road ahead," Aug. 26, 2026; OpenAI-Hugging Face Incident Technical Report; METR investigation report.</p>
+          <aside class="notes">Be careful here. Do not sensationalize. Say the incident is a warning about the class of problem, not proof that HAC would have prevented it.</aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Horizons">
+      <div class="frame">
+        <div class="frame-inner">
+          <div>
+            <div class="kicker">Positioning</div>
+            <h2>Security controls operate at different horizons.</h2>
+          </div>
+          <div class="spectrum">
+            <div class="spectrum-item">
+              <h3>ACTION</h3>
+              <p>What is this tool call, command, SQL statement, or MCP request about to do?</p>
+              <div class="mono-list"><span>command</span><span>tool args</span><span>single request</span></div>
+            </div>
+            <div class="spectrum-item">
+              <h3>TRAJECTORY</h3>
+              <p>Is this run still inside the declared goal, scope, and output boundary?</p>
+              <div class="mono-list"><span>sequence</span><span>goal drift</span><span>run contract</span></div>
+            </div>
+            <div class="spectrum-item">
+              <h3>SYSTEM STATE</h3>
+              <p>What data, artifacts, credentials, trust, and authority exist now?</p>
+              <div class="mono-list"><span>provenance</span><span>delegation</span><span>relationships</span></div>
+            </div>
+            <div class="spectrum-item active">
+              <h3>CAPABILITY</h3>
+              <p>What can the agent now cause because of accumulated state?</p>
+              <div class="mono-list"><span>emergent power</span><span>invariants</span><span>containment</span></div>
+            </div>
+          </div>
+          <p class="source">ACB remains valuable for action and trajectory enforcement. HAC is the next abstraction boundary: capability containment.</p>
+          <aside class="notes">This is the honest ACB slide. Do not imply ACB is primitive. Position HAC as a complementary security object.</aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Difference">
+      <div class="frame">
+        <div class="frame-inner">
+          <div>
+            <div class="kicker">Core distinction</div>
+            <h2>Action policy asks permission. HAC asks what changed.</h2>
+          </div>
+          <div class="compare">
+            <div class="column">
+              <h3>ACTION POLICY</h3>
+              <p class="question">"Is this action permitted?"</p>
+              <div class="pipe">
+                <span>UPLOAD(file, external)</span>
+                <span>policy lookup</span>
+                <span>allow / block</span>
+              </div>
+            </div>
+            <div class="column hac">
+              <h3>HAC</h3>
+              <p class="question">"What capability does this transition create?"</p>
+              <div class="pipe">
+                <span>SECRET -> ARTIFACT</span>
+                <span>ARTIFACT -> TRANSFORM -> PACKAGE</span>
+                <span>PACKAGE -> EXTERNAL_DESTINATION</span>
+                <span class="violate">DATA_EXFILTRATION_CAPABILITY</span>
+                <span class="violate">INVARIANT VIOLATED: SECRET != EXTERNAL</span>
+              </div>
+            </div>
+          </div>
+          <p class="source">Implemented in prototype: `DATA_EXFILTRATION` is derived from state history and artifact provenance, then blocked by `SECRET_TO_EXTERNAL`.</p>
+          <aside class="notes">This is the most important technical slide. Say: the dangerous property does not live in the upload call alone; it lives in the resulting state.</aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Tracks">
+      <div class="frame">
+        <div class="frame-inner">
+          <div>
+            <div class="kicker">Security state</div>
+            <h2>HAC turns history into a capability graph.</h2>
+          </div>
+          <div class="dimensions">
+            <div class="dimension-grid">
+              <div class="dimension"><strong>STATE</strong><span>Agents, resources, artifacts, credentials, history.</span></div>
+              <div class="dimension"><strong>PROVENANCE</strong><span>Derived artifacts inherit source classification.</span></div>
+              <div class="dimension"><strong>AUTHORITY</strong><span>Credential ownership and explicit delegation.</span></div>
+              <div class="dimension"><strong>TRUST</strong><span>Internal, trusted, untrusted, external boundaries.</span></div>
+              <div class="dimension"><strong>COMPOSITION</strong><span>Relationships accumulate across actions.</span></div>
+            </div>
+            <div class="graph-box" aria-label="Capability graph">
+              <div class="graph-line" style="left:118px; top:90px; width:190px; transform:rotate(14deg);"></div>
+              <div class="graph-line" style="left:312px; top:142px; width:210px; transform:rotate(19deg);"></div>
+              <div class="graph-line" style="left:520px; top:210px; width:175px; transform:rotate(-10deg);"></div>
+              <div class="graph-node risk-node" style="left:24px; top:58px;">SECRET_DB</div>
+              <div class="graph-node blue-node" style="left:238px; top:108px;">ARTIFACT</div>
+              <div class="graph-node blue-node" style="left:456px; top:178px;">PACKAGE</div>
+              <div class="graph-node risk-node" style="right:24px; top:150px;">PUBLIC_NET</div>
+              <div class="graph-node safe-node" style="left:238px; bottom:28px;">INVARIANTS</div>
+              <div class="graph-node risk-node" style="right:64px; bottom:28px;">BLOCK</div>
+            </div>
+          </div>
+          <p class="source">Implemented edge types include READS, WRITES, DERIVES, CONTAINS, SENDS, EXECUTES, DELEGATES, AUTHENTICATES, CONNECTS, TRUSTS, OWNS.</p>
+          <aside class="notes">This slide shows that HAC is not using embeddings or a model judge. It is deterministic graph and state evaluation.</aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Architecture">
+      <div class="frame">
+        <div class="frame-inner">
+          <div>
+            <div class="kicker">Architecture</div>
+            <h2>A reference-monitor layer for agent execution.</h2>
+          </div>
+          <div class="architecture">
+            <div class="stack">
+              <h3>Agents and runtimes</h3>
+              <div class="item">OpenAI / Anthropic / Google</div>
+              <div class="item">Open-weight models</div>
+              <div class="item">Custom agents</div>
+              <div class="item">Agent swarms</div>
+              <div class="item">MCP clients</div>
+            </div>
+            <div class="hac-core">
+              <div class="core-row"><b>01</b><span>Identity</span></div>
+              <div class="core-row"><b>02</b><span>Authority</span></div>
+              <div class="core-row"><b>03</b><span>State</span></div>
+              <div class="core-row"><b>04</b><span>Provenance</span></div>
+              <div class="core-row"><b>05</b><span>Capability graph</span></div>
+              <div class="core-row"><b>06</b><span>Security invariants</span></div>
+              <div class="core-row"><b>07</b><span>ALLOW / BLOCK / human intervention</span></div>
+            </div>
+            <div class="stack">
+              <h3>Effects and targets</h3>
+              <div class="item">Tools and APIs</div>
+              <div class="item">Files and artifacts</div>
+              <div class="item">Cloud and CI/CD</div>
+              <div class="item">Databases and secrets</div>
+              <div class="item">Network and infrastructure</div>
+            </div>
+          </div>
+          <p class="source">Implemented today: local engine, scenarios, MCP conceptual adapter, optional ACB adapter. Cloud enforcement and distributed state are future work.</p>
+          <aside class="notes">The architectural point: HAC sits between agent intent and environmental effect. It is model independent and offline in the current prototype.</aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Model Independence">
+      <div class="frame">
+        <div class="frame-inner">
+          <div>
+            <div class="kicker">Model independence</div>
+            <h2>The model is not the security boundary.</h2>
+          </div>
+          <div>
+            <div class="models">
+              <div class="model-tile">GPT</div>
+              <div class="model-tile">Claude</div>
+              <div class="model-tile">Llama</div>
+              <div class="model-tile">Qwen</div>
+              <div class="model-tile">Mistral</div>
+              <div class="model-tile">Custom</div>
+              <div class="model-tile">Future model</div>
+              <div class="model-tile">Agent swarm</div>
+            </div>
+            <div class="model-center">Same observable execution state. Same HAC security model. Same deterministic decision.</div>
+          </div>
+          <p class="source">Implemented test coverage: model family is recorded but does not affect the decision.</p>
+          <aside class="notes">Say: the model decides what it wants. HAC constrains what the environment permits based on observable state and invariants.</aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Multi-Agent">
+      <div class="frame">
+        <div class="frame-inner">
+          <div>
+            <div class="kicker">Multi-agent authority</div>
+            <h2>The horizon is no longer one agent.</h2>
+          </div>
+          <div class="authority-map">
+            <div class="authority-cell">Agent A</div>
+            <div class="authority-cell">contacts</div>
+            <div class="authority-cell">Agent B</div>
+            <div class="authority-cell">uses</div>
+            <div class="authority-cell break">B credential</div>
+            <div class="authority-cell">calls</div>
+            <div class="authority-cell break">External system</div>
+          </div>
+          <div class="two-column">
+            <div class="list-panel">
+              <h3>Invariant</h3>
+              <p>A's permission does not automatically become B's permission. B's credential does not automatically become A's authority.</p>
+            </div>
+            <div class="list-panel">
+              <h3>HAC behavior today</h3>
+              <p>The prototype blocks another agent's credential use unless an explicit delegation edge exists.</p>
+            </div>
+          </div>
+          <p class="source">Relevant to swarms, orchestration platforms, MCP ecosystems, and autonomous workflows.</p>
+          <aside class="notes">This is where HAC becomes more than data exfiltration. It is about authority composition over time and across actors.</aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Market">
+      <div class="frame">
+        <div class="frame-inner">
+          <div>
+            <div class="kicker">Product surface</div>
+            <h2>One containment abstraction across heterogeneous agents.</h2>
+          </div>
+          <div class="ecosystem">
+            <div class="rings">
+              <div class="ring" style="--inset: 16px;">Enterprise security: SOC / appsec / cloud security / AI governance</div>
+              <div class="ring" style="--inset: 58px;">Infrastructure: MCP / cloud / CI/CD / databases / identity / secrets</div>
+              <div class="ring" style="--inset: 96px;">Agent platforms: coding agents / research agents / orchestration / swarms</div>
+              <div class="ring center">HAC</div>
+            </div>
+            <div class="position-map">
+              <div class="axis-y"><span>Advisory / detection</span><span>Deterministic enforcement</span></div>
+              <div class="axis-x"><span>Individual action</span><span>Long-horizon capability</span></div>
+              <div class="plot" style="left:22%; top:68%;">AI gateways</div>
+              <div class="plot" style="left:20%; top:40%;">guardrails</div>
+              <div class="plot" style="left:42%; top:28%;">observability</div>
+              <div class="plot" style="left:48%; top:62%;">trajectory evaluators</div>
+              <div class="plot" style="left:30%; top:78%;">MCP policy</div>
+              <div class="plot" style="left:58%; top:50%;">identity controls</div>
+              <div class="plot hac" style="right:34px; top:72%;">HAC</div>
+            </div>
+          </div>
+          <p class="source">Categories are market categories, not customer claims. HAC is designed around a different security object: emergent capability.</p>
+          <aside class="notes">If asked about competition, say the market is real and crowded. HAC is not arguing others are useless; it is defining a capability/state layer.</aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Why Now">
+      <div class="frame">
+        <div class="frame-inner">
+          <div>
+            <div class="kicker">Why now</div>
+            <h2>The security state is getting larger.</h2>
+          </div>
+          <div class="why-now">
+            <div class="year"><strong>2023</strong><p>Tool-using agents become practical enough for developer workflows.</p></div>
+            <div class="year"><strong>2024</strong><p>Agent frameworks and tool protocols turn tools into a standard runtime surface.</p></div>
+            <div class="year"><strong>2025</strong><p>Research and products focus on runtime guardrails, information flow, and agent security controls.</p></div>
+            <div class="year"><strong>2026</strong><p>Long-horizon and multi-agent systems make accumulated state and authority central security concerns.</p></div>
+          </div>
+          <div class="equation">
+            <div class="eq-item">longer horizon</div>
+            <div class="eq-item">more tools</div>
+            <div class="eq-item">more authority</div>
+            <div class="eq-item">more agents</div>
+            <div class="eq-item">=</div>
+            <div class="eq-item result">larger security state</div>
+          </div>
+          <aside class="notes">Tie this to the market trend: more agents, more MCP, more access. The abstraction must evolve with the runtime.</aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Future">
+      <div class="frame">
+        <div class="frame-inner">
+          <div>
+            <div class="kicker">Roadmap</div>
+            <h2>From action control to capability containment.</h2>
+          </div>
+          <div class="two-column">
+            <div class="list-panel">
+              <h3>Today: implemented prototype</h3>
+              <ul>
+                <li>Deterministic state transition engine.</li>
+                <li>Provenance-preserving artifacts.</li>
+                <li>Capability composition and security invariants.</li>
+                <li>Fail-closed behavior and atomic blocked transitions.</li>
+                <li>Long-horizon attack and normal workflow scenarios.</li>
+              </ul>
+            </div>
+            <div class="list-panel">
+              <h3>Next: production direction</h3>
+              <ul>
+                <li>Declarative invariant policy files.</li>
+                <li>Persistent signed state and audit logs.</li>
+                <li>Cloud, identity, Kubernetes, and credential-broker integrations.</li>
+                <li>Richer MCP middleware and ACB layered enforcement.</li>
+                <li>Distributed state for agent swarms.</li>
+              </ul>
+            </div>
+          </div>
+          <p class="source">Technical honesty: HAC does not replace sandboxing, IAM, monitoring, action policy, or alignment work.</p>
+          <aside class="notes">Show discipline. Judges trust a project more when it separates prototype from roadmap.</aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Final">
+      <div class="frame">
+        <div class="frame-inner closing">
+          <div class="kicker">HAC / Horizon Agent Containment</div>
+          <div class="line">Everyone secures what an agent does.</div>
+          <div class="line accent">HAC secures what the agent becomes capable of doing.</div>
+          <p class="lead">Actions are the primitives. Capabilities are the attack surface.</p>
+          <aside class="notes">End with the line they should remember tomorrow. Then transition immediately into the live demo.</aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="counter"><span id="current">1</span> / <span id="total">13</span> <span id="slideTitle">Hook</span></div>
+  <div class="controls" aria-label="Slide controls">
+    <button id="prev" type="button" aria-label="Previous slide">Back</button>
+    <button id="full" type="button" aria-label="Toggle fullscreen">Full</button>
+    <button id="next" type="button" aria-label="Next slide">Next</button>
+  </div>
+  <div class="progress-track" aria-hidden="true"><div class="progress-bar" id="progress"></div></div>
+  <script src="app.js"></script>
+</body>
+</html>
