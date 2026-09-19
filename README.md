@@ -42,7 +42,6 @@ HAC does not claim to solve all agent security, replace sandboxing, replace IAM,
 
 - Pitch deck: https://sagarchhatrala.github.io/horizon-agent-containment/presentation/
 - Personal-site deck mirror: https://sagarchhatrala.github.io/hac/
-- Static web demo mirror: https://sagarchhatrala.github.io/hac-demo/
 
 The authoritative executable demo remains the local Streamlit app:
 
