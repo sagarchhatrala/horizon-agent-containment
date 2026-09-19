@@ -1,0 +1,46 @@
+@media print {
+  @page {
+    size: 16in 9in;
+    margin: 0;
+  }
+
+  html,
+  body {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    background: #101318;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .deck {
+    width: 100%;
+    height: auto;
+    background: #101318;
+  }
+
+  .slide,
+  .slide.active,
+  .slide:not(.active) {
+    display: flex !important;
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    page-break-after: always;
+    break-after: page;
+    padding: 34px 42px;
+  }
+
+  .frame {
+    width: 100%;
+    height: calc(100vh - 68px);
+    box-shadow: none;
+  }
+
+  .controls,
+  .counter,
+  .progress-track {
+    display: none !important;
+  }
+}
