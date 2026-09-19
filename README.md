@@ -45,6 +45,15 @@ python -m pytest
 python -m streamlit run demo/app.py
 ```
 
+The repository includes `.streamlit/config.toml` so the demo runs locally on `localhost`, headless, with Streamlit usage telemetry disabled.
+
+Quick local checks:
+
+```bash
+curl -I http://localhost:8501
+curl http://localhost:8501/_stcore/health
+```
+
 ## Layout
 
 - `src/hac/`: core deterministic engine.

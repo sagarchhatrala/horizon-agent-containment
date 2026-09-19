@@ -46,7 +46,7 @@ for action, decision in zip(scenario.actions(), decisions):
             "Invariant": ", ".join(i.value for i in decision.violated_invariants) or "-",
         }
     )
-st.dataframe(rows, use_container_width=True)
+st.dataframe(rows, width="stretch")
 
 latest = decisions[-1]
 left, right = st.columns(2)
@@ -66,4 +66,4 @@ with right:
     )
 
 st.subheader("Capability Graph")
-st.dataframe(engine.state.graph.to_dict()["edges"], use_container_width=True)
+st.dataframe(engine.state.graph.to_dict()["edges"], width="stretch")
