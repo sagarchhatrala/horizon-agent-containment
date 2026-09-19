@@ -1,0 +1,15 @@
+[project]
+name = "horizon-agent-containment"
+version = "0.1.0"
+description = "Deterministic long-horizon capability containment for AI agents."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest"]
+demo = ["streamlit"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
