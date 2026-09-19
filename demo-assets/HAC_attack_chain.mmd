@@ -1,0 +1,12 @@
+flowchart LR
+    A[READ SECRET] --> B[CREATE ARTIFACT]
+    B --> C[TRANSFORM]
+    C --> D[ENCRYPT]
+    D --> E[CHUNK]
+    E --> F{UPLOAD EXTERNAL?}
+    F -- yes --> G[DATA EXFILTRATION CAPABILITY]
+    G --> H[BLOCK]
+    F -- no --> I[ALLOW]
+
+    style G fill:#f9d9d9,stroke:#992222,stroke-width:2px
+    style H fill:#f7f2d0,stroke:#7c6900,stroke-width:2px

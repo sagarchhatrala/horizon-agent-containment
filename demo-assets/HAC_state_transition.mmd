@@ -1,0 +1,22 @@
+flowchart TD
+    A[Agent action] --> B[State transition]
+    B --> C[Capability emergence]
+    C --> D[Invariant check]
+    D --> E{Allowed?}
+    E -- yes --> F[Commit state]
+    E -- no --> G[BLOCK]
+
+    subgraph Key
+        K1[State]
+        K2[Provenance]
+        K3[Capability graph]
+        K4[Trust boundary]
+    end
+
+    B --> K1
+    B --> K2
+    C --> K3
+    D --> K4
+
+    style G fill:#f9d9d9,stroke:#992222,stroke-width:2px
+    style F fill:#d9f0d9,stroke:#1d6f3d,stroke-width:2px
