@@ -54,6 +54,38 @@ curl -I http://localhost:8501
 curl http://localhost:8501/_stcore/health
 ```
 
+## Pitch Deck
+
+The GitHub Pages-ready pitch deck is in `presentation/`.
+
+Open locally:
+
+```bash
+presentation/index.html
+```
+
+Serve locally:
+
+```bash
+python -m http.server 8766
+```
+
+Then open:
+
+```text
+http://127.0.0.1:8766/presentation/
+```
+
+Deploy with GitHub Pages:
+
+1. Push the repository to GitHub.
+2. In GitHub, open `Settings -> Pages`.
+3. Set source to `Deploy from a branch`.
+4. Select the branch and repository root.
+5. Open `/presentation/` on the generated Pages URL.
+
+The deck is static HTML/CSS/JavaScript, has no external runtime dependencies, supports keyboard navigation, and includes print/PDF styles.
+
 ## Layout
 
 - `src/hac/`: core deterministic engine.
